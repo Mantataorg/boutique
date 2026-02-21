@@ -1,0 +1,27 @@
+{
+  "name": "Boutique Mantata Pro",
+  "short_name": "Mantata",
+  "description": "Gestion complète de votre boutique - Inventaire, Ventes, Analytics",
+  "start_url": "/boutique/",
+  "display": "standalone",
+  "background_color": "#1C1917",
+  "theme_color": "#D97706",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23D97706'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>🏪</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23D97706'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>🏪</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "finance", "productivity"],
+  "lang": "fr-FR",
+  "dir": "ltr"
+}
