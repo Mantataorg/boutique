@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique Mantata - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Palette Africaine Moderne - Terre et Soleil */
+            --primary: #D97706;        /* Ambre/Orange terre cuite */
+            --primary-dark: #B45309;   
+            --primary-light: #FCD34D;  /* Jaune doré */
+            --secondary: #059669;      /* Vert émeraude */
+            --accent: #DC2626;         /* Rouge accent */
+            
+            --bg-dark: #1C1917;        /* Presque noir chaud */
+            --bg-card: #292524;        /* Gris chaud */
+            --bg-hover: #3F3735;
+            
+            --text-primary: #FAFAF9;
+            --text-secondary: #D6D3D1;
+            --text-muted: #A8A29E;
+            
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            
+            --border: #44403C;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(217, 119, 6, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(252, 211, 77, 0.08) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-5%, 5%) rotate(120deg); }
+            66% { transform: translate(5%, -5%) rotate(240deg); }
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-hover) 100%);
+            border-bottom: 2px solid var(--primary);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(217, 119, 6, 0.5); }
+        }
+
+        .logo-text h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: right;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background: var(--bg-card);
+            padding: 0.5rem;
+            border-radius: 12px;
+            display: flex;
+            gap: 0.5rem;
+            max-width: 1400px;
+            margin: 2rem auto;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(217, 119, 6, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .tab-btn:hover::before {
+            left: 100%;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .metric-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-subtext {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Products Table */
+        .products-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .products-table thead {
+            background: var(--bg-hover);
+        }
+
+        .products-table th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .products-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .products-table tbody tr {
+            transition: all 0.2s;
+        }
+
+        .products-table tbody tr:hover {
+            background: var(--bg-hover);
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stock-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .stock-ok { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .stock-low { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .stock-out { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+        .price-cell {
+            font-family: 'Space Mono', monospace;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+
+        .profit-cell {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Sales Form */
+        .sales-form {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input, .form-group select {
+            padding: 0.75rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Analytics Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .products-table {
+                font-size: 0.8rem;
+            }
+
+            .products-table th, .products-table td {
+                padding: 0.5rem;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 30px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast.success { border-color: var(--success); }
+        .toast.error { border-color: var(--danger); }
+
+        /* Top Products Showcase */
+        .top-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .product-rank {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .product-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+        }
+
+        .detail-value {
+            font-family: 'Space Mono', monospace;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🏪</div>
+                <div class="logo-text">
+                    <h1>MANTATA</h1>
+                    <p>Boutique Management</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Stock Total</div>
+                    <div class="stat-value" id="totalStock">---</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Valeur Stock</div>
+                    <div class="stat-value" id="stockValue">---</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Profit Potentiel</div>
+                    <div class="stat-value" id="potentialProfit">---</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('inventory')">📦 Inventaire</button>
+            <button class="tab-btn" onclick="switchTab('sales')">💰 Ventes</button>
+            <button class="tab-btn" onclick="switchTab('analytics')">📈 Analytics</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">📦</div>
+                    <div class="metric-label">Produits en Stock</div>
+                    <div class="metric-value" id="productsCount">87</div>
+                    <div class="metric-subtext">Références actives</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">💵</div>
+                    <div class="metric-label">Valeur Inventaire</div>
+                    <div class="metric-value" id="inventoryValue">223,525 F</div>
+                    <div class="metric-subtext">Prix de vente total</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">📈</div>
+                    <div class="metric-label">Marge Moyenne</div>
+                    <div class="metric-value">33.1%</div>
+                    <div class="metric-subtext">Coefficient ×1.49</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🎯</div>
+                    <div class="metric-label">Profit Potentiel</div>
+                    <div class="metric-value" id="totalProfit">73,900 F</div>
+                    <div class="metric-subtext">Si tout le stock est vendu</div>
+                </div>
+            </div>
+
+            <div class="products-section">
+                <div class="section-header">
+                    <h2 class="section-title">🏆 Top 10 Produits les Plus Rentables</h2>
+                </div>
+                <div class="top-products-grid" id="topProductsGrid"></div>
+            </div>
+        </div>
+
+        <!-- Inventory Tab -->
+        <div id="inventory" class="tab-content">
+            <div class="products-section">
+                <div class="section-header">
+                    <h2 class="section-title">📦 Inventaire Complet (87 Produits)</h2>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Rechercher un produit..." onkeyup="filterProducts()">
+                    </div>
+                </div>
+
+                <div class="filter-controls">
+                    <button class="filter-btn active" onclick="filterByStock('all')">Tous</button>
+                    <button class="filter-btn" onclick="filterByStock('ok')">Stock OK</button>
+                    <button class="filter-btn" onclick="filterByStock('low')">Stock Bas</button>
+                    <button class="filter-btn" onclick="filterByStock('out')">Rupture</button>
+                </div>
+
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Produit</th>
+                            <th>Stock</th>
+                            <th>Prix Vente</th>
+                            <th>Coût Achat</th>
+                            <th>Profit/Unité</th>
+                            <th>Profit Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sales Tab -->
+        <div id="sales" class="tab-content">
+            <div class="sales-form">
+                <h2 class="section-title">💰 Enregistrer une Vente</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Produit</label>
+                        <select id="saleProduct">
+                            <option value="">Sélectionner...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantité</label>
+                        <input type="number" id="saleQuantity" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Prix Unitaire</label>
+                        <input type="number" id="salePrice" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Total</label>
+                        <input type="number" id="saleTotal" readonly>
+                    </div>
+                </div>
+                <button class="btn" onclick="recordSale()">✅ Enregistrer la Vente</button>
+            </div>
+
+            <div class="products-section">
+                <h2 class="section-title">📝 Historique des Ventes du Jour</h2>
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Heure</th>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>Prix Unit.</th>
+                            <th>Total</th>
+                            <th>Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesHistory"></tbody>
+                </table>
+                <div style="margin-top: 2rem; text-align: right;">
+                    <div class="metric-card" style="display: inline-block; min-width: 300px;">
+                        <div class="metric-label">Total Ventes du Jour</div>
+                        <div class="metric-value" id="dailyTotal">0 FCFA</div>
+                        <div class="metric-subtext">Profit: <span id="dailyProfit">0 FCFA</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">📊</div>
+                    <div class="metric-label">Ventes Novembre</div>
+                    <div class="metric-value">339,875 F</div>
+                    <div class="metric-subtext">21 jours d'activité</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">💸</div>
+                    <div class="metric-label">Dépenses Novembre</div>
+                    <div class="metric-value">227,475 F</div>
+                    <div class="metric-subtext">Achats & approvisionnements</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">✅</div>
+                    <div class="metric-label">Bénéfice Net</div>
+                    <div class="metric-value">+112,000 F</div>
+                    <div class="metric-subtext">Marge 33.1%</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">📈</div>
+                    <div class="metric-label">Moyenne/Jour</div>
+                    <div class="metric-value">16,185 F</div>
+                    <div class="metric-subtext">Ventes quotidiennes</div>
+                </div>
+            </div>
+
+            <div class="products-section">
+                <h2 class="section-title">💡 Recommandations Stratégiques</h2>
+                <div style="padding: 2rem; line-height: 2;">
+                    <p><strong>✅ Points Forts:</strong></p>
+                    <ul style="margin: 1rem 0 2rem 2rem;">
+                        <li>81% des jours sont profitables en novembre</li>
+                        <li>Marge brute saine de 33.1%</li>
+                        <li>Top produits identifiés (Huile Mayor: +496 FCFA/unité)</li>
+                    </ul>
+
+                    <p><strong>🎯 Actions Prioritaires:</strong></p>
+                    <ul style="margin: 1rem 0 2rem 2rem;">
+                        <li>Focus sur les 20 produits les plus rentables</li>
+                        <li>Réduire stock des produits à faible marge</li>
+                        <li>Objectif: 20,000 FCFA/jour de ventes</li>
+                        <li>Négocier meilleurs prix avec fournisseurs</li>
+                    </ul>
+
+                    <p><strong>📊 Produits à Réapprovisionner:</strong></p>
+                    <ul style="margin: 1rem 0 2rem 2rem;">
+                        <li>Huile Mayor (profit: +496 FCFA/unité)</li>
+                        <li>Menthos g (profit: +331 FCFA/unité)</li>
+                        <li>Biscuit Adore (profit: +231 FCFA/unité)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Products Data
+        const products = [
+            {"id":1,"name":"Savon Azur","price":400,"stock":26,"category":"Hygiène","prixAchat":268,"profit":132},
+            {"id":2,"name":"Papier hygiénique","price":300,"stock":14,"category":"Hygiène","prixAchat":201,"profit":99},
+            {"id":3,"name":"Signale","price":500,"stock":6,"category":"Hygiène","prixAchat":335,"profit":165},
+            {"id":4,"name":"Sardine","price":500,"stock":9,"category":"Alimentation","prixAchat":335,"profit":165},
+            {"id":5,"name":"Mambo gd","price":500,"stock":6,"category":"Alimentation","prixAchat":335,"profit":165},
+            {"id":6,"name":"Mambo petit","price":200,"stock":6,"category":"Alimentation","prixAchat":134,"profit":66},
+            {"id":7,"name":"Huile Mayor","price":1500,"stock":3,"category":"Alimentation","prixAchat":1004,"profit":496},
+            {"id":8,"name":"Biscuit Adore","price":700,"stock":7,"category":"Confiserie","prixAchat":469,"profit":231},
+            {"id":9,"name":"Lait peack","price":500,"stock":10,"category":"Laitiers","prixAchat":335,"profit":165},
+            {"id":10,"name":"Sachets d'eau(02pqts)","price":50,"stock":43,"category":"Boissons","prixAchat":33,"profit":17},
+            {"id":11,"name":"Jus Djino gd","price":600,"stock":3,"category":"Boissons","prixAchat":402,"profit":198},
+            {"id":12,"name":"Œufs","price":100,"stock":32,"category":"Alimentation","prixAchat":67,"profit":33},
+            {"id":13,"name":"Pain","price":75,"stock":29,"category":"Alimentation","prixAchat":50,"profit":25},
+            {"id":14,"name":"Eau Pure","price":350,"stock":9,"category":"Boissons","prixAchat":234,"profit":116},
+            {"id":15,"name":"Colgate","price":500,"stock":5,"category":"Hygiène","prixAchat":335,"profit":165},
+            {"id":16,"name":"Matinal","price":100,"stock":20,"category":"Petit-déj","prixAchat":67,"profit":33},
+            {"id":17,"name":"Biscuits 50frs","price":50,"stock":45,"category":"Confiserie","prixAchat":33,"profit":17},
+            {"id":18,"name":"Cube Jumbo","price":50,"stock":14,"category":"Alimentation","prixAchat":33,"profit":17},
+            {"id":19,"name":"Nido sachet","price":50,"stock":17,"category":"Laitiers","prixAchat":33,"profit":17},
+            {"id":20,"name":"Détergent OMO","price":300,"stock":8,"category":"Hygiène","prixAchat":201,"profit":99},
+            {"id":21,"name":"Sucre 1kg","price":600,"stock":0,"category":"Alimentation","prixAchat":402,"profit":198},
+            {"id":22,"name":"Riz 1kg","price":500,"stock":0,"category":"Alimentation","prixAchat":335,"profit":165},
+            {"id":23,"name":"Spaghetti","price":250,"stock":12,"category":"Alimentation","prixAchat":167,"profit":83},
+            {"id":24,"name":"Tomate concentrée","price":150,"stock":8,"category":"Alimentation","prixAchat":100,"profit":50},
+            {"id":25,"name":"Bonbon 25frs","price":25,"stock":60,"category":"Confiserie","prixAchat":17,"profit":8},
+            {"id":26,"name":"Coca-Cola 50cl","price":500,"stock":12,"category":"Boissons","prixAchat":335,"profit":165},
+            {"id":27,"name":"Fanta 50cl","price":500,"stock":8,"category":"Boissons","prixAchat":335,"profit":165},
+            {"id":28,"name":"Sprite 50cl","price":500,"stock":6,"category":"Boissons","prixAchat":335,"profit":165},
+            {"id":29,"name":"Bic stylo","price":50,"stock":25,"category":"Papeterie","prixAchat":33,"profit":17},
+            {"id":30,"name":"Cahier 100p","price":300,"stock":10,"category":"Papeterie","prixAchat":201,"profit":99},
+            {"id":31,"name":"Brosse à dents","price":200,"stock":15,"category":"Hygiène","prixAchat":134,"profit":66},
+            {"id":32,"name":"Dentifrice","price":400,"stock":8,"category":"Hygiène","prixAchat":268,"profit":132},
+            {"id":33,"name":"Shampooing","price":600,"stock":6,"category":"Hygiène","prixAchat":402,"profit":198},
+            {"id":34,"name":"Savon liquide","price":800,"stock":4,"category":"Hygiène","prixAchat":536,"profit":264},
+            {"id":35,"name":"Éponge","price":100,"stock":20,"category":"Hygiène","prixAchat":67,"profit":33},
+            {"id":36,"name":"Allumettes","price":25,"stock":30,"category":"Autres","prixAchat":17,"profit":8},
+            {"id":37,"name":"Bougie","price":50,"stock":18,"category":"Autres","prixAchat":33,"profit":17},
+            {"id":38,"name":"Pile AA","price":100,"stock":24,"category":"Autres","prixAchat":67,"profit":33},
+            {"id":39,"name":"Pile AAA","price":100,"stock":16,"category":"Autres","prixAchat":67,"profit":33},
+            {"id":40,"name":"Lait Nido 400g","price":2500,"stock":2,"category":"Laitiers","prixAchat":1674,"profit":826},
+            {"id":41,"name":"Café Nescafé","price":1200,"stock":3,"category":"Petit-déj","prixAchat":803,"profit":397},
+            {"id":42,"name":"Thé Lipton","price":300,"stock":10,"category":"Petit-déj","prixAchat":201,"profit":99},
+            {"id":43,"name":"Chocolat","price":500,"stock":8,"category":"Confiserie","prixAchat":335,"profit":165},
+            {"id":44,"name":"Chewing-gum","price":25,"stock":40,"category":"Confiserie","prixAchat":17,"profit":8},
+            {"id":45,"name":"Chips","price":200,"stock":15,"category":"Confiserie","prixAchat":134,"profit":66},
+            {"id":46,"name":"Beignet","price":100,"stock":0,"category":"Alimentation","prixAchat":67,"profit":33},
+            {"id":47,"name":"Jus orange 1L","price":1000,"stock":4,"category":"Boissons","prixAchat":669,"profit":331},
+            {"id":48,"name":"Eau minérale 1.5L","price":500,"stock":10,"category":"Boissons","prixAchat":335,"profit":165},
+            {"id":49,"name":"Grenadine","price":800,"stock":3,"category":"Boissons","prixAchat":536,"profit":264},
+            {"id":50,"name":"Vinaigre","price":300,"stock":5,"category":"Alimentation","prixAchat":201,"profit":99},
+            {"id":51,"name":"Moutarde","price":400,"stock":4,"category":"Alimentation","prixAchat":268,"profit":132},
+            {"id":52,"name":"Ketchup","price":500,"stock":5,"category":"Alimentation","prixAchat":335,"profit":165},
+            {"id":53,"name":"Mayonnaise","price":600,"stock":4,"category":"Alimentation","prixAchat":402,"profit":198},
+            {"id":54,"name":"Sel 1kg","price":200,"stock":8,"category":"Alimentation","prixAchat":134,"profit":66},
+            {"id":55,"name":"Poivre","price":300,"stock":6,"category":"Alimentation","prixAchat":201,"profit":99},
+            {"id":56,"name":"Ail","price":100,"stock":12,"category":"Alimentation","prixAchat":67,"profit":33},
+            {"id":57,"name":"Oignon","price":50,"stock":20,"category":"Alimentation","prixAchat":33,"profit":17},
+            {"id":58,"name":"Gingembre","price":150,"stock":8,"category":"Alimentation","prixAchat":100,"profit":50},
+            {"id":59,"name":"Piment","price":100,"stock":15,"category":"Alimentation","prixAchat":67,"profit":33},
+            {"id":60,"name":"Lessive poudre","price":800,"stock":5,"category":"Hygiène","prixAchat":536,"profit":264},
+            {"id":61,"name":"Javel","price":300,"stock":8,"category":"Hygiène","prixAchat":201,"profit":99},
+            {"id":62,"name":"Savon noir","price":200,"stock":10,"category":"Hygiène","prixAchat":134,"profit":66},
+            {"id":63,"name":"Serviettes hygiéniques","price":500,"stock":6,"category":"Hygiène","prixAchat":335,"profit":165},
+            {"id":64,"name":"Rasoir","price":100,"stock":12,"category":"Hygiène","prixAchat":67,"profit":33},
+            {"id":65,"name":"Crème corps","price":1000,"stock":4,"category":"Hygiène","prixAchat":669,"profit":331},
+            {"id":66,"name":"Déodorant","price":800,"stock":5,"category":"Hygiène","prixAchat":536,"profit":264},
+            {"id":67,"name":"Parfum","price":1500,"stock":2,"category":"Hygiène","prixAchat":1004,"profit":496},
+            {"id":68,"name":"Coton","price":300,"stock":8,"category":"Hygiène","prixAchat":201,"profit":99},
+            {"id":69,"name":"Mouchoirs","price":100,"stock":15,"category":"Hygiène","prixAchat":67,"profit":33},
+            {"id":70,"name":"Cure-dents","price":50,"stock":20,"category":"Hygiène","prixAchat":33,"profit":17},
+            {"id":71,"name":"Sac plastique","price":25,"stock":50,"category":"Autres","prixAchat":17,"profit":8},
+            {"id":72,"name":"Briquet","price":50,"stock":25,"category":"Autres","prixAchat":33,"profit":17},
+            {"id":73,"name":"Corde","price":200,"stock":10,"category":"Autres","prixAchat":134,"profit":66},
+            {"id":74,"name":"Scotch","price":150,"stock":12,"category":"Papeterie","prixAchat":100,"profit":50},
+            {"id":75,"name":"Colle","price":100,"stock":15,"category":"Papeterie","prixAchat":67,"profit":33},
+            {"id":76,"name":"Ciseaux","price":300,"stock":8,"category":"Papeterie","prixAchat":201,"profit":99},
+            {"id":77,"name":"Règle","price":100,"stock":12,"category":"Papeterie","prixAchat":67,"profit":33},
+            {"id":78,"name":"Gomme","price":50,"stock":20,"category":"Papeterie","prixAchat":33,"profit":17},
+            {"id":79,"name":"Taille-crayon","price":50,"stock":18,"category":"Papeterie","prixAchat":33,"profit":17},
+            {"id":80,"name":"Crayon","price":50,"stock":25,"category":"Papeterie","prixAchat":33,"profit":17},
+            {"id":81,"name":"Feutre","price":100,"stock":15,"category":"Papeterie","prixAchat":67,"profit":33},
+            {"id":82,"name":"Marqueur","price":150,"stock":10,"category":"Papeterie","prixAchat":100,"profit":50},
+            {"id":83,"name":"Agrafeuse","price":500,"stock":5,"category":"Papeterie","prixAchat":335,"profit":165},
+            {"id":84,"name":"Agrafes","price":100,"stock":12,"category":"Papeterie","prixAchat":67,"profit":33},
+            {"id":85,"name":"Perforatrice","price":800,"stock":3,"category":"Papeterie","prixAchat":536,"profit":264},
+            {"id":86,"name":"Classeur","price":600,"stock":6,"category":"Papeterie","prixAchat":402,"profit":198},
+            {"id":87,"name":"Pochette plastique","price":100,"stock":20,"category":"Papeterie","prixAchat":67,"profit":33}
+        ];
+
+        let currentFilter = 'all';
+        let salesHistory = [];
+
+        // Initialize app
+        function init() {
+            updateHeaderStats();
+            renderProductsTable();
+            renderTopProducts();
+            populateSaleProductSelect();
+            updateSalesHistory();
+        }
+
+        // Update header statistics
+        function updateHeaderStats() {
+            const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
+            const stockValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0);
+            const totalProfit = products.reduce((sum, p) => sum + (p.profit * p.stock), 0);
+
+            document.getElementById('totalStock').textContent = totalStock.toLocaleString();
+            document.getElementById('stockValue').textContent = stockValue.toLocaleString() + ' F';
+            document.getElementById('potentialProfit').textContent = totalProfit.toLocaleString() + ' F';
+            
+            document.getElementById('productsCount').textContent = products.length;
+            document.getElementById('inventoryValue').textContent = stockValue.toLocaleString() + ' F';
+            document.getElementById('totalProfit').textContent = totalProfit.toLocaleString() + ' F';
+        }
+
+        // Render products table
+        function renderProductsTable() {
+            const tbody = document.getElementById('productsTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm);
+                let matchesFilter = true;
+                
+                if (currentFilter === 'ok') matchesFilter = p.stock > 10;
+                else if (currentFilter === 'low') matchesFilter = p.stock > 0 && p.stock <= 10;
+                else if (currentFilter === 'out') matchesFilter = p.stock === 0;
+                
+                return matchesSearch && matchesFilter;
+            });
+
+            // Sort by profit descending
+            filtered.sort((a, b) => b.profit - a.profit);
+
+            tbody.innerHTML = filtered.map((p, idx) => {
+                const stockClass = p.stock === 0 ? 'stock-out' : p.stock <= 10 ? 'stock-low' : 'stock-ok';
+                const stockText = p.stock === 0 ? 'Rupture' : p.stock <= 10 ? 'Bas' : 'OK';
+                
+                return `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td class="product-name">${p.name}</td>
+                        <td><span class="stock-badge ${stockClass}">${p.stock} (${stockText})</span></td>
+                        <td class="price-cell">${p.price.toLocaleString()} F</td>
+                        <td class="price-cell">${p.prixAchat.toLocaleString()} F</td>
+                        <td class="profit-cell">+${p.profit.toLocaleString()} F</td>
+                        <td class="profit-cell">+${(p.profit * p.stock).toLocaleString()} F</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render top products
+        function renderTopProducts() {
+            const topProducts = [...products]
+                .sort((a, b) => b.profit - a.profit)
+                .slice(0, 10);
+
+            const grid = document.getElementById('topProductsGrid');
+            grid.innerHTML = topProducts.map((p, idx) => `
+                <div class="product-card">
+                    <div class="product-rank">${idx + 1}</div>
+                    <h3>${p.name}</h3>
+                    <div class="product-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Prix Vente</span>
+                            <span class="detail-value">${p.price.toLocaleString()} F</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Coût Achat</span>
+                            <span class="detail-value">${p.prixAchat.toLocaleString()} F</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Profit/Unité</span>
+                            <span class="detail-value" style="color: var(--success)">+${p.profit.toLocaleString()} F</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Stock</span>
+                            <span class="detail-value">${p.stock} unités</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Profit Stock</span>
+                            <span class="detail-value" style="color: var(--success)">+${(p.profit * p.stock).toLocaleString()} F</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter functions
+        function filterProducts() {
+            renderProductsTable();
+        }
+
+        function filterByStock(filter) {
+            currentFilter = filter;
+            
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderProductsTable();
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Populate sale product select
+        function populateSaleProductSelect() {
+            const select = document.getElementById('saleProduct');
+            select.innerHTML = '<option value="">Sélectionner...</option>' + 
+                products
+                    .filter(p => p.stock > 0)
+                    .map(p => `<option value="${p.id}" data-price="${p.price}" data-profit="${p.profit}">${p.name} (${p.stock} en stock)</option>`)
+                    .join('');
+            
+            select.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                if (selectedOption.value) {
+                    const price = selectedOption.dataset.price;
+                    document.getElementById('salePrice').value = price;
+                    updateSaleTotal();
+                }
+            });
+        }
+
+        // Update sale total
+        document.getElementById('saleQuantity').addEventListener('input', updateSaleTotal);
+
+        function updateSaleTotal() {
+            const price = parseFloat(document.getElementById('salePrice').value) || 0;
+            const qty = parseInt(document.getElementById('saleQuantity').value) || 0;
+            document.getElementById('saleTotal').value = price * qty;
+        }
+
+        // Record sale
+        function recordSale() {
+            const productId = parseInt(document.getElementById('saleProduct').value);
+            const quantity = parseInt(document.getElementById('saleQuantity').value);
+            const price = parseFloat(document.getElementById('salePrice').value);
+            const total = parseFloat(document.getElementById('saleTotal').value);
+            
+            if (!productId || !quantity || !price) {
+                showToast('Veuillez remplir tous les champs', 'error');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            
+            if (quantity > product.stock) {
+                showToast('Stock insuffisant!', 'error');
+                return;
+            }
+            
+            // Update stock
+            product.stock -= quantity;
+            
+            // Record sale
+            const sale = {
+                time: new Date().toLocaleTimeString('fr-FR'),
+                product: product.name,
+                quantity: quantity,
+                price: price,
+                total: total,
+                profit: product.profit * quantity
+            };
+            
+            salesHistory.push(sale);
+            
+            // Reset form
+            document.getElementById('saleProduct').value = '';
+            document.getElementById('saleQuantity').value = 1;
+            document.getElementById('salePrice').value = '';
+            document.getElementById('saleTotal').value = '';
+            
+            // Update displays
+            updateSalesHistory();
+            renderProductsTable();
+            populateSaleProductSelect();
+            updateHeaderStats();
+            
+            showToast('Vente enregistrée avec succès!', 'success');
+        }
+
+        // Update sales history
+        function updateSalesHistory() {
+            const tbody = document.getElementById('salesHistory');
+            
+            if (salesHistory.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Aucune vente enregistrée aujourd\'hui</td></tr>';
+                document.getElementById('dailyTotal').textContent = '0 FCFA';
+                document.getElementById('dailyProfit').textContent = '0 FCFA';
+                return;
+            }
+            
+            tbody.innerHTML = salesHistory.map(s => `
+                <tr>
+                    <td>${s.time}</td>
+                    <td>${s.product}</td>
+                    <td>${s.quantity}</td>
+                    <td class="price-cell">${s.price.toLocaleString()} F</td>
+                    <td class="price-cell">${s.total.toLocaleString()} F</td>
+                    <td class="profit-cell">+${s.profit.toLocaleString()} F</td>
+                </tr>
+            `).join('');
+            
+            const dailyTotal = salesHistory.reduce((sum, s) => sum + s.total, 0);
+            const dailyProfit = salesHistory.reduce((sum, s) => sum + s.profit, 0);
+            
+            document.getElementById('dailyTotal').textContent = dailyTotal.toLocaleString() + ' FCFA';
+            document.getElementById('dailyProfit').textContent = dailyProfit.toLocaleString() + ' FCFA';
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <span>${type === 'success' ? '✅' : '❌'}</span>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
